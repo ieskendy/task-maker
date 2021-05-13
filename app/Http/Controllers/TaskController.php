@@ -26,10 +26,12 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         $user = $request->user();
+        $subTask = $task->sub_tasks;
         
         if ($this->canAccessTask($task, $user)) {
             return Inertia::render('Tasks/Task', [
-                "task" => $task
+                "task" => $task,
+                "subTasks" => $subTask
             ]);;
         } else {
             return Redirect::route('tasks');
@@ -60,6 +62,29 @@ class TaskController extends Controller
         }
 
         Inertia::share('flash', "Failed to create task");
+    }
+
+    public function storeSubTask($id, Request $request)
+    {
+        $task = Task::find($id);
+        $user = $request->user();
+
+        $request->validate([
+            'name' => 'required|max:255',
+        ]);
+
+        $createSubTask = $task->sub_tasks()->create([
+            "name" => $request->name,
+            "description" => $request->description,
+            "status" => "pending",
+            "user_id" => $user->id
+        ]);
+
+        if ($createSubTask) {
+            return redirect()->route("task", ["id" => $id]);
+        }
+
+        return "Something went wrong.";
     }
 
     public function update($id, Request $request) {
@@ -121,7 +146,6 @@ class TaskController extends Controller
             "tasks" => $tasks
         ]);
     }
-    
 
     public function restore(Request $request)
     {

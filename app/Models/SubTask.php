@@ -10,4 +10,6 @@ class SubTask extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $fillable = ['name', 'description', 'status', 'user_id'];
 }

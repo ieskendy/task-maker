@@ -18,6 +18,7 @@
         @routes
         <script src="/node_modules/uikit/dist/js/uikit.min.js" defer></script>
         <script src="/node_modules/uikit/dist/js/uikit-icons.min.js" defer></script>
+        
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">

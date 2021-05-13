@@ -19,12 +19,7 @@ use App\Http\Controllers\TaskController;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect('/tasks');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
@@ -38,5 +33,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/tasks/trashed', [TaskCont
 Route::middleware(['auth:sanctum', 'verified'])->get('/tasks/create', [TaskController::class, 'create'])->name('create-task');
 Route::middleware(['auth:sanctum', 'verified'])->put('/tasks/{id}', [TaskController::class, 'update'])->name('task-update');
 Route::middleware(['auth:sanctum', 'verified'])->post('/tasks', [TaskController::class, 'store']);
+Route::middleware(['auth:sanctum', 'verified'])->post('/tasks/{id}/sub-task', [TaskController::class, 'storeSubTask']);
 Route::middleware(['auth:sanctum', 'verified'])->post('/tasks/restore', [TaskController::class, 'restore']);
 Route::middleware(['auth:sanctum', 'verified'])->delete('/tasks', [TaskController::class, 'delete']);
