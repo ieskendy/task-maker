@@ -2,22 +2,12 @@
     <app-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Task List
+                Trashed Task
             </h2>
         </template>
 
         <div class="uk-section">
             <div class="uk-container uk-container-large">
-                <div class="uk-width-1-1 uk-flex uk-flex-right uk-margin uk-grid-small" uk-grid>
-                    <div>
-                        <a :href="route('create-task')" class="uk-button uk-button-secondary uk-border-rounded uk-width-small">Add Task</a>
-                    </div>
-
-                    <div>
-                        <a :href="route('export-task')" class="uk-button uk-button-secondary uk-border-rounded uk-width-small">Export</a>
-                    </div>
-                </div>
-                
                 <div class="uk-grid uk-child-width-1-2@m uk-child-width-1-3@xl" uk-grid>
                     <div v-for="task in $page['props']['tasks']" :key="task.name">
                         <div class="uk-card uk-card-default">
@@ -26,7 +16,7 @@
                                 <div class="uk-grid-small uk-flex-middle" uk-grid>
                                     <div class="uk-width-expand">
                                         <h3 class="uk-card-title uk-margin-remove-bottom">{{ task.name }}</h3>
-                                        <p class="uk-text-meta uk-margin-remove-top"><time datetime="2016-04-01T19:00">{{ task.created_at }}</time></p>
+                                        <p class="uk-text-meta uk-margin-remove-top">Deleted At {{ task.deleted_at }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -36,15 +26,11 @@
                             <div class="uk-card-footer uk-text-right">
                                 <div class="uk-grid-small uk-width-1-1 uk-flex uk-flex-right" uk-grid>
                                     <div>
-                                        <a :href="route('task', [task.id])" class="uk-button uk-button-default  uk-text-bold uk-text-capitalize uk-border-rounded" type="button">View</a>
-                                    </div>
-
-                                    <div>
                                         <button
-                                            class="uk-button uk-button-danger uk-text-bold uk-text-capitalize uk-border-rounded"
+                                            class="uk-button uk-button-primary   uk-text-bold uk-text-capitalize uk-border-rounded"
                                             type="button"
-                                            @click="confirmTaskDeletion(task)"
-                                            >Delete</button>
+                                            @click="restoration(task)"
+                                            >Restore</button>
                                     </div>
                                 </div>
                             </div>
@@ -55,13 +41,13 @@
         </div>
 
         <!-- Delete Account Confirmation Modal -->
-        <jet-dialog-modal :show="confirmingTaskDeletion" @close="closeModal">
+        <jet-dialog-modal :show="confirmingRestoration" @close="closeModal">
             <template #title>
-                Delete Task
+                Restore Task
             </template>
 
             <template #content>
-                Are you sure you want to delete this task?
+                Are you sure you want to restore this task?
             </template>
 
             <template #footer>
@@ -69,11 +55,12 @@
                     Cancel
                 </jet-secondary-button>
 
-                <jet-danger-button class="ml-2" @click="deleteTask(this.currentTask)">
-                    Delete
+                <jet-danger-button class="ml-2" @click="restoreTask(this.currentTask)">
+                    Restore
                 </jet-danger-button>
             </template>
         </jet-dialog-modal>
+
     </app-layout>
 </template>
 
@@ -86,8 +73,8 @@
     import JetInputError from '@/Jetstream/InputError'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton'
 
-    const tasks = [{}]
     export default {
+        
         components: {
             AppLayout,
             JetActionSection,
@@ -100,27 +87,25 @@
 
         data() {
             return {
-                tasks,
-                confirmingTaskDeletion: false,
-                currentTask: null
+                currentTask: null,
+                confirmingRestoration: false,
             }
         },
 
         methods: {
-            confirmTaskDeletion(task) {
-                this.currentTask = task
-                this.confirmingTaskDeletion = true
+            restoration(task) {
+                this.currentTask = task;
+                this.confirmingRestoration = true;
             },
 
             closeModal() {
-                this.confirmingTaskDeletion = false
+                this.confirmingRestoration = false;
             },
 
-            deleteTask(task) {
-                this.$inertia.delete('/tasks', {
-                    data: task,
+            restoreTask(task) {
+                this.$inertia.post('/tasks/restore', task, {
                     onSuccess: (page) => {
-                        this.confirmingTaskDeletion = false;
+                        this.confirmingRestoration = false;
                     }
                 })
             }

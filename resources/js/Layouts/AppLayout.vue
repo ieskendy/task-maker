@@ -24,6 +24,10 @@
                                 <jet-nav-link :href="route('tasks')" :active="route().current('tasks')">
                                     Tasks
                                 </jet-nav-link>
+
+                                <jet-nav-link :href="route('tasks-trashed')" :active="route().current('tasks-trashed')">
+                                    Trashed Tasks
+                                </jet-nav-link>
                             </div>
                         </div>
 

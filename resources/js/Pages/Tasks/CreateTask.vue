@@ -23,8 +23,7 @@
                                                 class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                                                  v-model="form.name" 
                                             />
-
-                                             <div v-if="errors.name"><p class="text-sm text-red-600 mt-4 mb-0">{{ errors.name }}</p></div>
+                                            <jet-input-error :message="errors.name" class="mt-2" />
                                         </div>
 
                                         <div class="col-span-6">
@@ -62,6 +61,7 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
+    import JetInputError from '@/Jetstream/InputError'
 
     export default {
         props: {
@@ -69,7 +69,8 @@
         },
         
         components: {
-            AppLayout
+            AppLayout,
+            JetInputError
         },
 
         data() {

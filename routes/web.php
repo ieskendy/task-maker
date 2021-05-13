@@ -32,5 +32,11 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/tasks', [TaskController::class, 'index'])->name('tasks');
+Route::middleware(['auth:sanctum', 'verified'])->get('/tasks/export', [TaskController::class, 'export'])->name('export-task');
+Route::middleware(['auth:sanctum', 'verified'])->get('/tasks/{id}', [TaskController::class, 'show'])->name('task');
+Route::middleware(['auth:sanctum', 'verified'])->get('/tasks/trashed', [TaskController::class, 'trashed'])->name('tasks-trashed');
 Route::middleware(['auth:sanctum', 'verified'])->get('/tasks/create', [TaskController::class, 'create'])->name('create-task');
+Route::middleware(['auth:sanctum', 'verified'])->put('/tasks/{id}', [TaskController::class, 'update'])->name('task-update');
 Route::middleware(['auth:sanctum', 'verified'])->post('/tasks', [TaskController::class, 'store']);
+Route::middleware(['auth:sanctum', 'verified'])->post('/tasks/restore', [TaskController::class, 'restore']);
+Route::middleware(['auth:sanctum', 'verified'])->delete('/tasks', [TaskController::class, 'delete']);

@@ -22,4 +22,17 @@ class Task extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
+    public static function deleteTask($id)
+    {
+        $task = static::find($id);
+
+        if ($task) {
+            if ($task->delete()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
